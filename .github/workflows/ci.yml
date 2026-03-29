@@ -47,9 +47,9 @@ jobs:
         run: pnpm build
 
       - name: Migration (test DB)
-        run: pnpm --filter api db:migrate
-        env:
-          DATABASE_URL: postgresql://test_user:test_pass@localhost:5432/test_db
+        run: |
+          echo "DATABASE_URL=postgresql://test_user:test_pass@localhost:5432/test_db" > apps/api/.env
+          pnpm --filter api db:migrate
 
   docker-build:
     runs-on: ubuntu-latest
