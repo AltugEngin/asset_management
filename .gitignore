@@ -14,5 +14,3 @@ apps/api/src/db/migrations/*.sql
 # Vite
 apps/web/dist
 
-# TanStack Router generated
-apps/web/src/routeTree.gen.ts

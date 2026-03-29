@@ -76,6 +76,7 @@ export interface UpdateUserDto {
   lastName?: string;
   groupId?: number;
   isActive?: boolean;
+  password?: string;
 }
 
 export interface CreateMachineDto {
