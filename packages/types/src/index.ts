@@ -32,13 +32,34 @@ export interface User {
   updatedAt: string;
 }
 
+export interface MachineName {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
+export interface MachineLocation {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
+export interface MachineManufacturer {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
 export interface Machine {
   id: number;
   code: string;
+  nameId: number;
   name: string;
   description: string | null;
+  locationId: number | null;
   location: string | null;
   status: MachineStatus;
+  manufacturerId: number | null;
   manufacturer: string | null;
   model: string | null;
   serialNumber: string | null;
@@ -81,11 +102,11 @@ export interface UpdateUserDto {
 
 export interface CreateMachineDto {
   code: string;
-  name: string;
+  nameId: number;
   description?: string;
-  location?: string;
+  locationId?: number;
   status?: MachineStatus;
-  manufacturer?: string;
+  manufacturerId?: number;
   model?: string;
   serialNumber?: string;
   purchaseDate?: string;
@@ -93,14 +114,18 @@ export interface CreateMachineDto {
 
 export interface UpdateMachineDto {
   code?: string;
-  name?: string;
+  nameId?: number;
   description?: string;
-  location?: string;
+  locationId?: number;
   status?: MachineStatus;
-  manufacturer?: string;
+  manufacturerId?: number;
   model?: string;
   serialNumber?: string;
   purchaseDate?: string;
+}
+
+export interface CreateLookupDto {
+  name: string;
 }
 
 // ─── API Response Envelopes ───────────────────────────────────────────────────
@@ -141,3 +166,4 @@ export const CAN_VIEW_USERS: UserRole[] = ["admin", "direktör", "müdür"];
 export const CAN_CREATE_MACHINE: UserRole[] = ["admin", "müdür"];
 export const CAN_EDIT_MACHINE: UserRole[] = ["admin", "müdür", "şef"];
 export const CAN_DELETE_MACHINE: UserRole[] = ["admin"];
+export const CAN_MANAGE_LOOKUPS: UserRole[] = ["admin"];

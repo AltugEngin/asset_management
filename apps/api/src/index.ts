@@ -7,6 +7,7 @@ import { authRouter } from "./modules/auth/auth.router";
 import { usersRouter } from "./modules/users/users.router";
 import { machinesRouter } from "./modules/machines/machines.router";
 import { userGroupsRouter } from "./modules/user-groups/user-groups.router";
+import { machineLookupsRouter } from "./modules/machine-lookups/machine-lookups.router";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/machines", machinesRouter);
 app.use("/api/v1/user-groups", userGroupsRouter);
+app.use("/api/v1/machine-lookups", machineLookupsRouter);
 
 // Health check
 app.get("/health", (_req, res) => res.json({ status: "ok" }));

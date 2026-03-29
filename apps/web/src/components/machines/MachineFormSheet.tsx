@@ -1,17 +1,26 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import type { ApiResponse, Machine, CreateMachineDto, UpdateMachineDto } from "@repo/types";
+import type {
+  ApiResponse,
+  Machine,
+  MachineName,
+  MachineLocation,
+  MachineManufacturer,
+  CreateMachineDto,
+  UpdateMachineDto,
+} from "@repo/types";
 
 const machineSchema = z.object({
   code: z.string().min(1, "Kod gerekli").max(50),
-  name: z.string().min(1, "Ad gerekli").max(200),
+  nameId: z.coerce.number().int().positive("Ad seçilmeli"),
   description: z.string().optional(),
-  location: z.string().optional(),
+  locationId: z.coerce.number().int().positive().optional(),
   status: z.enum(["aktif", "pasif", "bakımda"]).default("aktif"),
-  manufacturer: z.string().optional(),
+  manufacturerId: z.coerce.number().int().positive().optional(),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
 });
@@ -27,6 +36,31 @@ interface Props {
 export function MachineFormSheet({ open, onClose, machine }: Props) {
   const queryClient = useQueryClient();
 
+  const { data: namesRes } = useQuery({
+    queryKey: ["machine-names"],
+    queryFn: () =>
+      api.get<ApiResponse<MachineName[]>>("/machine-lookups/names").then((r) => r.data),
+    enabled: open,
+  });
+
+  const { data: locationsRes } = useQuery({
+    queryKey: ["machine-locations"],
+    queryFn: () =>
+      api.get<ApiResponse<MachineLocation[]>>("/machine-lookups/locations").then((r) => r.data),
+    enabled: open,
+  });
+
+  const { data: manufacturersRes } = useQuery({
+    queryKey: ["machine-manufacturers"],
+    queryFn: () =>
+      api.get<ApiResponse<MachineManufacturer[]>>("/machine-lookups/manufacturers").then((r) => r.data),
+    enabled: open,
+  });
+
+  const names = namesRes?.success ? namesRes.data : [];
+  const locations = locationsRes?.success ? locationsRes.data : [];
+  const manufacturers = manufacturersRes?.success ? manufacturersRes.data : [];
+
   const {
     register,
     handleSubmit,
@@ -37,16 +71,35 @@ export function MachineFormSheet({ open, onClose, machine }: Props) {
     defaultValues: machine
       ? {
           code: machine.code,
-          name: machine.name,
+          nameId: machine.nameId,
           description: machine.description ?? "",
-          location: machine.location ?? "",
+          locationId: machine.locationId ?? undefined,
           status: machine.status,
-          manufacturer: machine.manufacturer ?? "",
+          manufacturerId: machine.manufacturerId ?? undefined,
           model: machine.model ?? "",
           serialNumber: machine.serialNumber ?? "",
         }
       : { status: "aktif" },
   });
+
+  useEffect(() => {
+    if (open) {
+      reset(
+        machine
+          ? {
+              code: machine.code,
+              nameId: machine.nameId,
+              description: machine.description ?? "",
+              locationId: machine.locationId ?? undefined,
+              status: machine.status,
+              manufacturerId: machine.manufacturerId ?? undefined,
+              model: machine.model ?? "",
+              serialNumber: machine.serialNumber ?? "",
+            }
+          : { status: "aktif" }
+      );
+    }
+  }, [open, machine, reset]);
 
   const createMutation = useMutation({
     mutationFn: (data: CreateMachineDto) =>
@@ -68,10 +121,15 @@ export function MachineFormSheet({ open, onClose, machine }: Props) {
   });
 
   const onSubmit = (data: MachineForm) => {
+    const payload = {
+      ...data,
+      locationId: data.locationId || undefined,
+      manufacturerId: data.manufacturerId || undefined,
+    };
     if (machine) {
-      updateMutation.mutate(data);
+      updateMutation.mutate(payload);
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(payload as CreateMachineDto);
     }
   };
 
@@ -103,8 +161,15 @@ export function MachineFormSheet({ open, onClose, machine }: Props) {
             <input {...register("code")} className={inputCls} placeholder="KOM.3060" />
           </Field>
 
-          <Field label="Ad *" error={errors.name?.message}>
-            <input {...register("name")} className={inputCls} placeholder="Makine adı" />
+          <Field label="Ad *" error={errors.nameId?.message}>
+            <select {...register("nameId")} className={inputCls}>
+              <option value="">— Seçiniz —</option>
+              {names.map((n) => (
+                <option key={n.id} value={n.id}>
+                  {n.name}
+                </option>
+              ))}
+            </select>
           </Field>
 
           <Field label="Durum">
@@ -116,11 +181,25 @@ export function MachineFormSheet({ open, onClose, machine }: Props) {
           </Field>
 
           <Field label="Konum">
-            <input {...register("location")} className={inputCls} placeholder="Üretim Sahası A" />
+            <select {...register("locationId")} className={inputCls}>
+              <option value="">— Seçiniz —</option>
+              {locations.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
           </Field>
 
           <Field label="Üretici">
-            <input {...register("manufacturer")} className={inputCls} placeholder="Atlas Copco" />
+            <select {...register("manufacturerId")} className={inputCls}>
+              <option value="">— Seçiniz —</option>
+              {manufacturers.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
           </Field>
 
           <Field label="Model">

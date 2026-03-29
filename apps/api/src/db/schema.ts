@@ -51,14 +51,38 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// ─── Machine Lookup Tables ────────────────────────────────────────────────────
+
+export const machineNames = pgTable("machine_names", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 200 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const machineLocations = pgTable("machine_locations", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 200 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const machineManufacturers = pgTable("machine_manufacturers", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 200 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const machines = pgTable("machines", {
   id: serial("id").primaryKey(),
   code: varchar("code", { length: 50 }).notNull().unique(),
-  name: varchar("name", { length: 200 }).notNull(),
+  nameId: integer("name_id")
+    .notNull()
+    .references(() => machineNames.id),
   description: text("description"),
-  location: varchar("location", { length: 200 }),
+  locationId: integer("location_id").references(() => machineLocations.id),
   status: machineStatusEnum("status").default("aktif").notNull(),
-  manufacturer: varchar("manufacturer", { length: 200 }),
+  manufacturerId: integer("manufacturer_id").references(
+    () => machineManufacturers.id
+  ),
   model: varchar("model", { length: 200 }),
   serialNumber: varchar("serial_number", { length: 100 }),
   purchaseDate: timestamp("purchase_date"),
@@ -76,5 +100,38 @@ export const usersRelations = relations(users, ({ one }) => ({
   group: one(userGroups, {
     fields: [users.groupId],
     references: [userGroups.id],
+  }),
+}));
+
+export const machineNamesRelations = relations(machineNames, ({ many }) => ({
+  machines: many(machines),
+}));
+
+export const machineLocationsRelations = relations(
+  machineLocations,
+  ({ many }) => ({
+    machines: many(machines),
+  })
+);
+
+export const machineManufacturersRelations = relations(
+  machineManufacturers,
+  ({ many }) => ({
+    machines: many(machines),
+  })
+);
+
+export const machinesRelations = relations(machines, ({ one }) => ({
+  machineName: one(machineNames, {
+    fields: [machines.nameId],
+    references: [machineNames.id],
+  }),
+  machineLocation: one(machineLocations, {
+    fields: [machines.locationId],
+    references: [machineLocations.id],
+  }),
+  machineManufacturer: one(machineManufacturers, {
+    fields: [machines.manufacturerId],
+    references: [machineManufacturers.id],
   }),
 }));

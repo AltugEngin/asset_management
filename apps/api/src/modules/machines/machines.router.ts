@@ -16,11 +16,11 @@ machinesRouter.use(requireAuth);
 
 const machineSchema = z.object({
   code: z.string().min(1).max(50),
-  name: z.string().min(1).max(200),
+  nameId: z.number().int().positive(),
   description: z.string().optional(),
-  location: z.string().optional(),
+  locationId: z.number().int().positive().optional(),
   status: z.enum(["aktif", "pasif", "bakımda"]).optional(),
-  manufacturer: z.string().optional(),
+  manufacturerId: z.number().int().positive().optional(),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   purchaseDate: z.string().datetime().optional(),
