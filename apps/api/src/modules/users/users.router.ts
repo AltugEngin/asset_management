@@ -51,7 +51,7 @@ usersRouter.get(
 // Kullanıcı detayı — admin, direktör, müdür (şef/mühendis sadece kendi profilini görebilir)
 usersRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id as string);
     const authReq = req as AuthRequest;
 
     const allowedRoles = ["admin", "direktör", "müdür"];
@@ -107,7 +107,7 @@ usersRouter.put(
       return;
     }
     try {
-      const user = await updateUser(parseInt(req.params.id), result.data);
+      const user = await updateUser(parseInt(req.params.id as string), result.data);
       const { password: _, ...sanitized } = user;
       res.json({ success: true, data: sanitized });
     } catch (err) {
@@ -125,12 +125,12 @@ usersRouter.delete(
   requireRole("admin"),
   async (req: Request, res: Response) => {
     const authReq = req as AuthRequest;
-    if (authReq.user.id === parseInt(req.params.id)) {
+    if (authReq.user.id === parseInt(req.params.id as string)) {
       res.status(400).json({ success: false, error: "Kendi hesabınızı silemezsiniz" });
       return;
     }
     try {
-      await deleteUser(parseInt(req.params.id));
+      await deleteUser(parseInt(req.params.id as string));
       res.json({ success: true, data: { message: "Kullanıcı silindi" } });
     } catch (err) {
       res.status(404).json({
@@ -147,7 +147,7 @@ usersRouter.patch(
   requireRole("admin"),
   async (req: Request, res: Response) => {
     try {
-      const user = await setUserActive(parseInt(req.params.id), true);
+      const user = await setUserActive(parseInt(req.params.id as string), true);
       const { password: _, ...sanitized } = user;
       res.json({ success: true, data: sanitized });
     } catch (err) {
@@ -161,7 +161,7 @@ usersRouter.patch(
   requireRole("admin"),
   async (req: Request, res: Response) => {
     try {
-      const user = await setUserActive(parseInt(req.params.id), false);
+      const user = await setUserActive(parseInt(req.params.id as string), false);
       const { password: _, ...sanitized } = user;
       res.json({ success: true, data: sanitized });
     } catch (err) {

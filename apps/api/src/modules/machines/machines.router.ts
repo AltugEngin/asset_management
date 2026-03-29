@@ -41,7 +41,7 @@ machinesRouter.get("/", async (_req: Request, res: Response) => {
 // Makine detayı — tüm roller
 machinesRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const data = await getMachineById(parseInt(req.params.id));
+    const data = await getMachineById(parseInt(req.params.id as string));
     res.json({ success: true, data });
   } catch (err) {
     res.status(404).json({
@@ -84,7 +84,7 @@ machinesRouter.put(
       return;
     }
     try {
-      const data = await updateMachine(parseInt(req.params.id), result.data);
+      const data = await updateMachine(parseInt(req.params.id as string), result.data);
       res.json({ success: true, data });
     } catch (err) {
       res.status(404).json({
@@ -101,7 +101,7 @@ machinesRouter.delete(
   requireRole("admin"),
   async (req: Request, res: Response) => {
     try {
-      await deleteMachine(parseInt(req.params.id));
+      await deleteMachine(parseInt(req.params.id as string));
       res.json({ success: true, data: { message: "Makine silindi" } });
     } catch (err) {
       res.status(404).json({
