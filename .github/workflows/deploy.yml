@@ -32,7 +32,7 @@ jobs:
 
             # Migration'ı önce çalıştır
             docker compose -f docker-compose.prod.yml run --rm api \
-              node dist/db/migrate.js
+              node apps/api/dist/db/migrate.js
 
             # Servisleri güncelle (rolling)
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
