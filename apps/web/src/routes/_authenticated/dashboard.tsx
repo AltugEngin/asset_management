@@ -35,15 +35,15 @@ function DashboardPage() {
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight">Dashboard</h2>
         <p className="text-muted-foreground">
           Hoşgeldiniz, {user?.firstName} {user?.lastName}
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Toplam Makine" value={machines.length} />
         <StatCard
           label="Aktif"

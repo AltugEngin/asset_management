@@ -129,16 +129,15 @@ export function MachinesTable({ data, role }: Props) {
   return (
     <>
       {/* Toolbar */}
-      <div className="flex items-center justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <input
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="Ara (kod, ad, konum...)"
-          className="w-72 rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+          className="w-full sm:w-72 rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
         />
 
-        <div className="flex items-center gap-2">
-          {/* Durum filtresi */}
+        <div className="flex items-center gap-2 shrink-0">
           <select
             className="rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
             onChange={(e) => {
@@ -157,7 +156,7 @@ export function MachinesTable({ data, role }: Props) {
                 setEditingMachine(undefined);
                 setSheetOpen(true);
               }}
-              className="rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors"
+              className="rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap"
             >
               + Yeni Makine
             </button>
@@ -165,8 +164,8 @@ export function MachinesTable({ data, role }: Props) {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-lg border overflow-hidden">
+      {/* Table — yatay kaydırma */}
+      <div className="rounded-lg border overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             {table.getHeaderGroups().map((hg) => (

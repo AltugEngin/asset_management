@@ -22,7 +22,7 @@ function MachinesPage() {
   const machines = data?.success ? data.data : [];
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold tracking-tight">Makineler</h2>
         <p className="text-muted-foreground">Üretim tesisindeki tüm makineler</p>

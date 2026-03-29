@@ -47,7 +47,7 @@ function UsersPage() {
   const users = data?.success ? data.data : [];
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Kullanıcılar</h2>
@@ -66,7 +66,7 @@ function UsersPage() {
       {isLoading ? (
         <div className="py-16 text-center text-muted-foreground">Yükleniyor...</div>
       ) : (
-        <div className="rounded-lg border overflow-hidden">
+        <div className="rounded-lg border overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-muted/50">
               <tr>
