@@ -59,6 +59,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Repo adını küçük harfe çevir
+        id: repo
+        run: echo "name=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Docker Buildx kurulum
         uses: docker/setup-buildx-action@v3
 
@@ -76,8 +80,8 @@ jobs:
           file: docker/api.Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/api:${{ github.sha }}
-            ghcr.io/${{ github.repository }}/api:latest
+            ghcr.io/${{ steps.repo.outputs.name }}/api:${{ github.sha }}
+            ghcr.io/${{ steps.repo.outputs.name }}/api:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -88,7 +92,7 @@ jobs:
           file: docker/web.Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/web:${{ github.sha }}
-            ghcr.io/${{ github.repository }}/web:latest
+            ghcr.io/${{ steps.repo.outputs.name }}/web:${{ github.sha }}
+            ghcr.io/${{ steps.repo.outputs.name }}/web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

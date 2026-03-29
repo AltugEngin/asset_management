@@ -25,7 +25,7 @@ jobs:
 
             # .env değişkenlerini güncelle
             export IMAGE_TAG=$GITHUB_SHA
-            export GITHUB_REPO=$GITHUB_REPOSITORY
+            export GITHUB_REPO=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
 
             # Yeni image'ları çek
             docker compose -f docker-compose.prod.yml pull
