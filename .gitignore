@@ -8,8 +8,6 @@ dist
 # pnpm
 .pnpm-store
 
-# Drizzle generated
-apps/api/src/db/migrations/*.sql
 
 # Vite
 apps/web/dist
