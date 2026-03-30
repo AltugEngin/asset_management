@@ -16,10 +16,27 @@ services:
       timeout: 5s
       retries: 5
 
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_USER: ${TS_USER}
+      POSTGRES_PASSWORD: ${TS_PASSWORD}
+      POSTGRES_DB: ${TS_DB}
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TS_USER} -d ${TS_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   api:
     image: ghcr.io/${GITHUB_REPO}/api:${IMAGE_TAG:-latest}
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      TIMESCALE_URL: postgresql://${TS_USER}:${TS_PASSWORD}@timescaledb:5432/${TS_DB}
+      OPCUA_URL: opc.tcp://opcua-server:4840
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: 7d
       PORT: 3001
@@ -27,6 +44,21 @@ services:
       NODE_ENV: production
     depends_on:
       postgres:
+        condition: service_healthy
+      timescaledb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  opcua-server:
+    image: ghcr.io/${GITHUB_REPO}/opcua-server:${IMAGE_TAG:-latest}
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      TIMESCALE_URL: postgresql://${TS_USER}:${TS_PASSWORD}@timescaledb:5432/${TS_DB}
+      OPCUA_PORT: 4840
+    depends_on:
+      postgres:
+        condition: service_healthy
+      timescaledb:
         condition: service_healthy
     restart: unless-stopped
 
@@ -40,3 +72,4 @@ services:
 
 volumes:
   postgres_data:
+  timescaledb_data:

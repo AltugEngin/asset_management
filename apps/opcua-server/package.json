@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts",
+    "dev": "tsx watch --env-file .env src/index.ts",
+    "start": "tsx --env-file .env src/index.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/types": "workspace:*",
     "node-opcua": "^2.132.0",
     "pg": "^8.14.1",
     "tsx": "^4.19.3"

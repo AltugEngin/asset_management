@@ -99,3 +99,15 @@ jobs:
             ghcr.io/${{ steps.repo.outputs.name }}/web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: OPC UA Server image build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/opcua-server.Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ steps.repo.outputs.name }}/opcua-server:${{ github.sha }}
+            ghcr.io/${{ steps.repo.outputs.name }}/opcua-server:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
