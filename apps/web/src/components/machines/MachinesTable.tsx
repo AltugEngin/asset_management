@@ -30,9 +30,10 @@ const columnHelper = createColumnHelper<Machine>();
 interface Props {
   data: Machine[];
   role: UserRole;
+  onRowClick?: (machine: Machine) => void;
 }
 
-export function MachinesTable({ data, role }: Props) {
+export function MachinesTable({ data, role, onRowClick }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -87,7 +88,8 @@ export function MachinesTable({ data, role }: Props) {
             <div className="flex items-center gap-1 justify-end">
               {canEdit && (
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setEditingMachine(row.original);
                     setSheetOpen(true);
                   }}
@@ -98,7 +100,10 @@ export function MachinesTable({ data, role }: Props) {
               )}
               {canDelete && (
                 <button
-                  onClick={() => setDeletingMachine(row.original)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeletingMachine(row.original);
+                  }}
                   className="rounded px-2 py-1 text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors"
                 >
                   Sil
@@ -197,7 +202,11 @@ export function MachinesTable({ data, role }: Props) {
               </tr>
             ) : (
               table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="hover:bg-muted/30 transition-colors">
+                <tr
+                  key={row.id}
+                  className={`hover:bg-muted/30 transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
+                  onClick={() => onRowClick?.(row.original)}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-4 py-3">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

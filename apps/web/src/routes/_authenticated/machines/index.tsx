@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/auth.store";
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/_authenticated/machines/")({
 function MachinesPage() {
   const user = useAuthStore((s) => s.user);
   const role = user?.group.name as UserRole;
+  const navigate = useNavigate();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["machines"],
@@ -41,7 +42,16 @@ function MachinesPage() {
       )}
 
       {!isLoading && !isError && (
-        <MachinesTable data={machines} role={role} />
+        <MachinesTable
+          data={machines}
+          role={role}
+          onRowClick={(m) =>
+            navigate({
+              to: "/machines/$machineId",
+              params: { machineId: String(m.id) },
+            })
+          }
+        />
       )}
     </div>
   );

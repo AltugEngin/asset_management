@@ -1,0 +1,20 @@
+{
+  "name": "opcua-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "node-opcua": "^2.132.0",
+    "pg": "^8.14.1",
+    "tsx": "^4.19.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/pg": "^8.11.12",
+    "typescript": "^5.8.3"
+  }
+}

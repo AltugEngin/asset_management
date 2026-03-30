@@ -1,6 +1,39 @@
 name: asset-management-dev
 
 services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_USER: ts_user
+      POSTGRES_PASSWORD: ts_pass
+      POSTGRES_DB: ts_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ts_user -d ts_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  opcua-server:
+    build:
+      context: .
+      dockerfile: docker/opcua-server.Dockerfile
+      target: deps
+    command: pnpm --filter opcua-server dev
+    environment:
+      DATABASE_URL: postgresql://asset_user:asset_pass@postgres:5432/asset_db
+      OPCUA_PORT: 4840
+    ports:
+      - "4840:4840"
+    volumes:
+      - ./apps/opcua-server/src:/app/apps/opcua-server/src
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:16-alpine
     environment:
@@ -25,6 +58,8 @@ services:
     command: pnpm --filter api dev
     environment:
       DATABASE_URL: postgresql://asset_user:asset_pass@postgres:5432/asset_db
+      TIMESCALE_URL: postgresql://ts_user:ts_pass@timescaledb:5432/ts_db
+      OPCUA_URL: opc.tcp://opcua-server:4840
       JWT_SECRET: dev_jwt_secret_change_in_production
       JWT_EXPIRES_IN: 7d
       PORT: 3001
@@ -37,6 +72,8 @@ services:
       - ./packages:/app/packages
     depends_on:
       postgres:
+        condition: service_healthy
+      timescaledb:
         condition: service_healthy
 
   web:
@@ -55,3 +92,4 @@ services:
 
 volumes:
   postgres_data:
+  timescaledb_data:

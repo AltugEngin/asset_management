@@ -167,3 +167,40 @@ export const CAN_CREATE_MACHINE: UserRole[] = ["admin", "müdür"];
 export const CAN_EDIT_MACHINE: UserRole[] = ["admin", "müdür", "şef"];
 export const CAN_DELETE_MACHINE: UserRole[] = ["admin"];
 export const CAN_MANAGE_LOOKUPS: UserRole[] = ["admin"];
+
+// ─── OPC UA / Readings ────────────────────────────────────────────────────────
+
+export type ReadingTag =
+  | "güç"
+  | "tüketim"
+  | "sıcaklık"
+  | "vibrasyon"
+  | "üretim";
+
+export const READING_TAGS: ReadingTag[] = [
+  "güç",
+  "tüketim",
+  "sıcaklık",
+  "vibrasyon",
+  "üretim",
+];
+
+export const TAG_LABELS: Record<
+  ReadingTag,
+  { label: string; unit: string; color: string }
+> = {
+  güç: { label: "Güç", unit: "kW", color: "#3b82f6" },
+  tüketim: { label: "Tüketim", unit: "litre/h", color: "#10b981" },
+  sıcaklık: { label: "Sıcaklık", unit: "°C", color: "#f97316" },
+  vibrasyon: { label: "Vibrasyon", unit: "mm/s", color: "#8b5cf6" },
+  üretim: { label: "Üretim", unit: "adet", color: "#06b6d4" },
+};
+
+export interface MachineReading {
+  time: string;
+  value: number;
+}
+
+export type LatestReadings = Partial<
+  Record<ReadingTag, { value: number; time: string }>
+>;
