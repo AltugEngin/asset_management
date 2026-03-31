@@ -21,7 +21,25 @@ jobs:
           envs: GITHUB_REPOSITORY,GITHUB_SHA
           script: |
             set -e
-            cd /opt/asset_management
+
+            REPO_DIR=/opt/asset_management
+            REPO_URL="https://${{ secrets.GHCR_USER }}:${{ secrets.GHCR_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+
+            # Repo'yu klonla (ilk deploy) veya güncelle
+            if [ -d "$REPO_DIR/.git" ]; then
+              echo "→ Repo güncelleniyor..."
+              cd $REPO_DIR
+              git fetch origin
+              git checkout main
+              git pull origin main
+            else
+              echo "→ Repo ilk kez klonlanıyor..."
+              mkdir -p $REPO_DIR
+              git clone --depth 1 $REPO_URL $REPO_DIR
+              cd $REPO_DIR
+            fi
+
+            cd $REPO_DIR
 
             # .env değişkenlerini güncelle
             export IMAGE_TAG=$GITHUB_SHA
