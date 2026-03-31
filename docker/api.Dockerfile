@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/types/package.json ./packages/types/
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # ── Derleme ───────────────────────────────────────────────────────────────────
 FROM deps AS builder
@@ -26,7 +26,7 @@ COPY packages/types/package.json ./packages/types/
 COPY packages/types/src ./packages/types/src
 
 # Sadece production bağımlılıklarını kur (symlink sorunu olmaz)
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --no-frozen-lockfile --prod
 
 # Derlenmiş dosyaları ve migration'ları kopyala
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
