@@ -44,9 +44,13 @@ jobs:
               git checkout main
               git pull origin main
             else
-              echo "→ Repo ilk kez klonlanıyor..."
-              mkdir -p $REPO_DIR
+              echo "→ Repo klonlanıyor (.env korunuyor)..."
+              # .env varsa yedekle
+              [ -f "$REPO_DIR/.env" ] && cp "$REPO_DIR/.env" /tmp/.env_backup
+              rm -rf $REPO_DIR
               git clone --depth 1 $REPO_URL $REPO_DIR
+              # .env'i geri yükle
+              [ -f /tmp/.env_backup ] && cp /tmp/.env_backup $REPO_DIR/.env
               cd $REPO_DIR
             fi
 
