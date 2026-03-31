@@ -41,6 +41,7 @@ async function main() {
 
   const server = new OPCUAServer({
     port: PORT,
+    hostname: process.env.OPCUA_HOSTNAME ?? "opcua-server",
     resourcePath: "/UA/AssetManagement",
     buildInfo: {
       productName: "AssetManagement OPC UA Server",
