@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedMachinesIndexRouteImport } from './routes/_authenticated/machines/index'
+import { Route as AuthenticatedMachinesMachineIdRouteImport } from './routes/_authenticated/machines/$machineId'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminUserGroupsIndexRouteImport } from './routes/_authenticated/admin/user-groups/index'
 
@@ -42,6 +43,12 @@ const AuthenticatedMachinesIndexRoute =
     path: '/machines/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedMachinesMachineIdRoute =
+  AuthenticatedMachinesMachineIdRouteImport.update({
+    id: '/machines/$machineId',
+    path: '/machines/$machineId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
     id: '/admin/users/',
@@ -59,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/machines/$machineId': typeof AuthenticatedMachinesMachineIdRoute
   '/machines/': typeof AuthenticatedMachinesIndexRoute
   '/admin/user-groups/': typeof AuthenticatedAdminUserGroupsIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/machines/$machineId': typeof AuthenticatedMachinesMachineIdRoute
   '/machines': typeof AuthenticatedMachinesIndexRoute
   '/admin/user-groups': typeof AuthenticatedAdminUserGroupsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/machines/$machineId': typeof AuthenticatedMachinesMachineIdRoute
   '/_authenticated/machines/': typeof AuthenticatedMachinesIndexRoute
   '/_authenticated/admin/user-groups/': typeof AuthenticatedAdminUserGroupsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/machines/$machineId'
     | '/machines/'
     | '/admin/user-groups/'
     | '/admin/users/'
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/machines/$machineId'
     | '/machines'
     | '/admin/user-groups'
     | '/admin/users'
@@ -104,6 +116,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/_authenticated/dashboard'
+    | '/_authenticated/machines/$machineId'
     | '/_authenticated/machines/'
     | '/_authenticated/admin/user-groups/'
     | '/_authenticated/admin/users/'
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMachinesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/machines/$machineId': {
+      id: '/_authenticated/machines/$machineId'
+      path: '/machines/$machineId'
+      fullPath: '/machines/$machineId'
+      preLoaderRoute: typeof AuthenticatedMachinesMachineIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
       path: '/admin/users'
@@ -171,6 +191,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMachinesMachineIdRoute: typeof AuthenticatedMachinesMachineIdRoute
   AuthenticatedMachinesIndexRoute: typeof AuthenticatedMachinesIndexRoute
   AuthenticatedAdminUserGroupsIndexRoute: typeof AuthenticatedAdminUserGroupsIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
@@ -178,6 +199,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMachinesMachineIdRoute: AuthenticatedMachinesMachineIdRoute,
   AuthenticatedMachinesIndexRoute: AuthenticatedMachinesIndexRoute,
   AuthenticatedAdminUserGroupsIndexRoute:
     AuthenticatedAdminUserGroupsIndexRoute,

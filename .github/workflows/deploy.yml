@@ -12,6 +12,17 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      - uses: actions/checkout@v4
+
+      - name: docker-compose.prod.yml dosyasını VPS'e kopyala
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: docker-compose.prod.yml
+          target: /opt/asset_management
+
       - name: VPS'e SSH ile deploy
         uses: appleboy/ssh-action@v1
         with:
