@@ -25,22 +25,25 @@ jobs:
             REPO_DIR=/opt/asset_management
             REPO_URL="https://${{ secrets.GHCR_USER }}:${{ secrets.GHCR_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
 
-            # Repo'yu klonla (ilk deploy) veya güncelle
+            # Sadece config dosyalarını sparse checkout ile çek (kaynak kodu VPS'te olmayacak)
             if [ -d "$REPO_DIR/.git" ]; then
-              echo "→ Repo güncelleniyor..."
+              echo "→ Config dosyaları güncelleniyor (sparse checkout)..."
               cd $REPO_DIR
               git fetch origin
               git checkout main
               git pull origin main
             else
-              echo "→ Repo klonlanıyor (.env korunuyor)..."
+              echo "→ Config dosyaları klonlanıyor (sparse checkout, .env korunuyor)..."
               # .env varsa yedekle
               [ -f "$REPO_DIR/.env" ] && cp "$REPO_DIR/.env" /tmp/.env_backup
               rm -rf $REPO_DIR
-              git clone --depth 1 $REPO_URL $REPO_DIR
+              git clone --no-checkout --depth 1 --filter=blob:none $REPO_URL $REPO_DIR
+              cd $REPO_DIR
+              git sparse-checkout init --cone
+              git sparse-checkout set docker-compose.prod.yml docker scripts
+              git checkout main
               # .env'i geri yükle
               [ -f /tmp/.env_backup ] && cp /tmp/.env_backup $REPO_DIR/.env
-              cd $REPO_DIR
             fi
 
             cd $REPO_DIR
