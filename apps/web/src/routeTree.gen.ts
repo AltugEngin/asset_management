@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedMachinesIndexRouteImport } from './routes/_authenticated/machines/index'
+import { Route as AuthenticatedKaldirmaEkipmanlariIndexRouteImport } from './routes/_authenticated/kaldirma-ekipmanlari/index'
 import { Route as AuthenticatedMachinesMachineIdRouteImport } from './routes/_authenticated/machines/$machineId'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminUserGroupsIndexRouteImport } from './routes/_authenticated/admin/user-groups/index'
@@ -43,6 +44,12 @@ const AuthenticatedMachinesIndexRoute =
     path: '/machines/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedKaldirmaEkipmanlariIndexRoute =
+  AuthenticatedKaldirmaEkipmanlariIndexRouteImport.update({
+    id: '/kaldirma-ekipmanlari/',
+    path: '/kaldirma-ekipmanlari/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedMachinesMachineIdRoute =
   AuthenticatedMachinesMachineIdRouteImport.update({
     id: '/machines/$machineId',
@@ -67,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/machines/$machineId': typeof AuthenticatedMachinesMachineIdRoute
+  '/kaldirma-ekipmanlari/': typeof AuthenticatedKaldirmaEkipmanlariIndexRoute
   '/machines/': typeof AuthenticatedMachinesIndexRoute
   '/admin/user-groups/': typeof AuthenticatedAdminUserGroupsIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -76,6 +84,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/machines/$machineId': typeof AuthenticatedMachinesMachineIdRoute
+  '/kaldirma-ekipmanlari': typeof AuthenticatedKaldirmaEkipmanlariIndexRoute
   '/machines': typeof AuthenticatedMachinesIndexRoute
   '/admin/user-groups': typeof AuthenticatedAdminUserGroupsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
@@ -87,6 +96,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/machines/$machineId': typeof AuthenticatedMachinesMachineIdRoute
+  '/_authenticated/kaldirma-ekipmanlari/': typeof AuthenticatedKaldirmaEkipmanlariIndexRoute
   '/_authenticated/machines/': typeof AuthenticatedMachinesIndexRoute
   '/_authenticated/admin/user-groups/': typeof AuthenticatedAdminUserGroupsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard'
     | '/machines/$machineId'
+    | '/kaldirma-ekipmanlari/'
     | '/machines/'
     | '/admin/user-groups/'
     | '/admin/users/'
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard'
     | '/machines/$machineId'
+    | '/kaldirma-ekipmanlari'
     | '/machines'
     | '/admin/user-groups'
     | '/admin/users'
@@ -117,6 +129,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_authenticated/dashboard'
     | '/_authenticated/machines/$machineId'
+    | '/_authenticated/kaldirma-ekipmanlari/'
     | '/_authenticated/machines/'
     | '/_authenticated/admin/user-groups/'
     | '/_authenticated/admin/users/'
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMachinesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/kaldirma-ekipmanlari/': {
+      id: '/_authenticated/kaldirma-ekipmanlari/'
+      path: '/kaldirma-ekipmanlari'
+      fullPath: '/kaldirma-ekipmanlari/'
+      preLoaderRoute: typeof AuthenticatedKaldirmaEkipmanlariIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/machines/$machineId': {
       id: '/_authenticated/machines/$machineId'
       path: '/machines/$machineId'
@@ -192,6 +212,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMachinesMachineIdRoute: typeof AuthenticatedMachinesMachineIdRoute
+  AuthenticatedKaldirmaEkipmanlariIndexRoute: typeof AuthenticatedKaldirmaEkipmanlariIndexRoute
   AuthenticatedMachinesIndexRoute: typeof AuthenticatedMachinesIndexRoute
   AuthenticatedAdminUserGroupsIndexRoute: typeof AuthenticatedAdminUserGroupsIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
@@ -200,6 +221,8 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMachinesMachineIdRoute: AuthenticatedMachinesMachineIdRoute,
+  AuthenticatedKaldirmaEkipmanlariIndexRoute:
+    AuthenticatedKaldirmaEkipmanlariIndexRoute,
   AuthenticatedMachinesIndexRoute: AuthenticatedMachinesIndexRoute,
   AuthenticatedAdminUserGroupsIndexRoute:
     AuthenticatedAdminUserGroupsIndexRoute,

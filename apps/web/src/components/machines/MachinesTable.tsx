@@ -15,9 +15,11 @@ import {
   CAN_CREATE_MACHINE,
   CAN_EDIT_MACHINE,
   CAN_DELETE_MACHINE,
+  CAN_REQUEST_EQUIPMENT,
 } from "@repo/types";
 import { MachineFormSheet } from "./MachineFormSheet";
 import { MachineDeleteDialog } from "./MachineDeleteDialog";
+import { EquipmentRequestSheet } from "./EquipmentRequestSheet";
 
 const statusBadge: Record<string, string> = {
   aktif: "bg-green-100 text-green-800",
@@ -41,10 +43,12 @@ export function MachinesTable({ data, role, onRowClick }: Props) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingMachine, setEditingMachine] = useState<Machine | undefined>(undefined);
   const [deletingMachine, setDeletingMachine] = useState<Machine | null>(null);
+  const [requestSheetOpen, setRequestSheetOpen] = useState(false);
 
   const canCreate = CAN_CREATE_MACHINE.includes(role);
   const canEdit = CAN_EDIT_MACHINE.includes(role);
   const canDelete = CAN_DELETE_MACHINE.includes(role);
+  const canRequest = CAN_REQUEST_EQUIPMENT.includes(role);
 
   const columns = useMemo(
     () => [
@@ -155,6 +159,14 @@ export function MachinesTable({ data, role, onRowClick }: Props) {
             <option value="bakımda">Bakımda</option>
           </select>
 
+          {canRequest && (
+            <button
+              onClick={() => setRequestSheetOpen(true)}
+              className="rounded-md bg-amber-600 text-white px-4 py-2 text-sm font-medium hover:bg-amber-700 transition-colors whitespace-nowrap"
+            >
+              Kaldırma Ekipmanı Talep Et
+            </button>
+          )}
           {canCreate && (
             <button
               onClick={() => {
@@ -254,6 +266,10 @@ export function MachinesTable({ data, role, onRowClick }: Props) {
       <MachineDeleteDialog
         machine={deletingMachine}
         onClose={() => setDeletingMachine(null)}
+      />
+      <EquipmentRequestSheet
+        open={requestSheetOpen}
+        onClose={() => setRequestSheetOpen(false)}
       />
     </>
   );

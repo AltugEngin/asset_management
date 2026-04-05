@@ -2,6 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import bcrypt from "bcryptjs";
 import * as schema from "../db/schema";
+import type { LiftingEquipmentGroup } from "@repo/types";
 
 async function main() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -133,6 +134,34 @@ async function main() {
     .returning();
 
   console.log(`${insertedMachines.length} makine eklendi.`);
+
+  // ─── Lifting Equipment ────────────────────────────────────────────────────
+
+  const liftingEquipmentData: {
+    code: string;
+    name: string;
+    group: LiftingEquipmentGroup;
+    description: string;
+  }[] = [
+    { code: "ML-001", name: "JLG 450AJ Manlift", group: "manlift", description: "Eklemli kollu manlift, max yükseklik 14m" },
+    { code: "ML-002", name: "Genie Z-45/25J Manlift", group: "manlift", description: "Dizel eklemli manlift, max yükseklik 16m" },
+    { code: "ML-003", name: "Haulotte HA16RTJ Manlift", group: "manlift", description: "Dört tekerlekli tahrikli manlift, max yükseklik 16m" },
+    { code: "VN-001", name: "Liebherr LTM 1050 Mobil Vinç", group: "vinç", description: "50 ton kapasiteli mobil vinç" },
+    { code: "VN-002", name: "Tadano ATF 60G Vinç", group: "vinç", description: "60 ton kapasiteli all-terrain vinç" },
+    { code: "VN-003", name: "Grove GMK3060L Vinç", group: "vinç", description: "60 ton kapasiteli 3 akslı mobil vinç" },
+    { code: "VN-004", name: "Manitowoc MLC100 Vinç", group: "vinç", description: "100 ton kapasiteli paletli vinç" },
+    { code: "SP-001", name: "Genie GS-3246 Sepet", group: "sepet", description: "Elektrikli makaslı sepet, max yükseklik 9.9m" },
+    { code: "SP-002", name: "JLG 3246ES Sepet", group: "sepet", description: "Elektrikli makaslı sepet, dar geçiş için uygun" },
+    { code: "SP-003", name: "Skyjack SJ4632 Sepet", group: "sepet", description: "Elektrikli makaslı sepet, max yükseklik 11.7m" },
+  ];
+
+  const insertedLiftingEquipment = await db
+    .insert(schema.liftingEquipment)
+    .values(liftingEquipmentData)
+    .onConflictDoNothing()
+    .returning();
+
+  console.log(`${insertedLiftingEquipment.length} kaldırma ekipmanı eklendi.`);
   console.log("Seed tamamlandı.");
 
   await pool.end();

@@ -9,6 +9,10 @@ export type UserRole =
 
 export type MachineStatus = "aktif" | "pasif" | "bakımda";
 
+export type LiftingEquipmentGroup = "manlift" | "vinç" | "sepet";
+
+export type EquipmentRequestStatus = "beklemede" | "onaylandı" | "reddedildi";
+
 // ─── Entities ────────────────────────────────────────────────────────────────
 
 export interface UserGroup {
@@ -64,6 +68,34 @@ export interface Machine {
   model: string | null;
   serialNumber: string | null;
   purchaseDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LiftingEquipment {
+  id: number;
+  code: string;
+  name: string;
+  group: LiftingEquipmentGroup;
+  description: string | null;
+  isAvailable: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EquipmentRequest {
+  id: number;
+  equipmentId: number;
+  equipment?: LiftingEquipment;
+  requestedById: number;
+  requestedBy?: Omit<User, "group">;
+  machineId: number | null;
+  machine?: Pick<Machine, "id" | "code" | "name"> | null;
+  reason: string;
+  status: EquipmentRequestStatus;
+  reviewedById: number | null;
+  reviewedBy?: Omit<User, "group"> | null;
+  reviewedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -167,6 +199,21 @@ export const CAN_CREATE_MACHINE: UserRole[] = ["admin", "müdür"];
 export const CAN_EDIT_MACHINE: UserRole[] = ["admin", "müdür", "şef"];
 export const CAN_DELETE_MACHINE: UserRole[] = ["admin"];
 export const CAN_MANAGE_LOOKUPS: UserRole[] = ["admin"];
+export const CAN_REQUEST_EQUIPMENT: UserRole[] = ["mühendis"];
+export const CAN_REVIEW_EQUIPMENT_REQUESTS: UserRole[] = ["admin"];
+export const CAN_VIEW_EQUIPMENT_REQUESTS: UserRole[] = ["admin", "direktör", "müdür", "şef", "mühendis"];
+
+// ─── Equipment Request DTOs ───────────────────────────────────────────────────
+
+export interface CreateEquipmentRequestDto {
+  equipmentId: number;
+  machineId?: number;
+  reason: string;
+}
+
+export interface ReviewEquipmentRequestDto {
+  status: "onaylandı" | "reddedildi";
+}
 
 // ─── OPC UA / Readings ────────────────────────────────────────────────────────
 

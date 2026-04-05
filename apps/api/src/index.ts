@@ -9,6 +9,8 @@ import { machinesRouter } from "./modules/machines/machines.router";
 import { userGroupsRouter } from "./modules/user-groups/user-groups.router";
 import { machineLookupsRouter } from "./modules/machine-lookups/machine-lookups.router";
 import { readingsRouter } from "./modules/readings/readings.router";
+import { liftingEquipmentRouter } from "./modules/lifting-equipment/lifting-equipment.router";
+import { equipmentRequestsRouter } from "./modules/equipment-requests/equipment-requests.router";
 import { setupTimescale } from "./db/timescale-setup";
 import { startOpcuaClient } from "./opcua/client";
 
@@ -31,6 +33,8 @@ app.use("/api/v1/machines", machinesRouter);
 app.use("/api/v1/user-groups", userGroupsRouter);
 app.use("/api/v1/machine-lookups", machineLookupsRouter);
 app.use("/api/v1/readings", readingsRouter);
+app.use("/api/v1/lifting-equipment", liftingEquipmentRouter);
+app.use("/api/v1/equipment-requests", equipmentRequestsRouter);
 
 // Health check
 app.get("/health", (_req, res) => res.json({ status: "ok" }));

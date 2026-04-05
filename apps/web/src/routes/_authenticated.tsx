@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/store/auth.store";
 import { api } from "@/lib/api";
 import type { ApiResponse, AuthPayload } from "@repo/types";
-import { CAN_MANAGE_USERS, CAN_VIEW_USERS } from "@repo/types";
+import { CAN_MANAGE_USERS, CAN_VIEW_USERS, CAN_VIEW_EQUIPMENT_REQUESTS } from "@repo/types";
 import type { UserRole } from "@repo/types";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -54,6 +54,9 @@ function AuthenticatedLayout() {
       <nav className="flex-1 px-2 py-4 space-y-1">
         <NavLink to="/dashboard" label="Dashboard" onClick={() => setSidebarOpen(false)} />
         <NavLink to="/machines" label="Makineler" onClick={() => setSidebarOpen(false)} />
+        {role && CAN_VIEW_EQUIPMENT_REQUESTS.includes(role) && (
+          <NavLink to="/kaldirma-ekipmanlari" label="Kaldırma Ekipmanları" onClick={() => setSidebarOpen(false)} />
+        )}
         {role && CAN_VIEW_USERS.includes(role) && (
           <NavLink to="/admin/users" label="Kullanıcılar" onClick={() => setSidebarOpen(false)} />
         )}
