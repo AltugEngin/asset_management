@@ -65,6 +65,9 @@ jobs:
             # Servisleri güncelle (rolling)
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+            # Nginx'i reload et (yeni container IP'lerini alsın)
+            docker compose -f docker-compose.prod.yml exec -T nginx-proxy nginx -s reload
+
             # Eski image'ları temizle
             docker image prune -f
 
